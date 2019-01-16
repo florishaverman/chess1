@@ -3,16 +3,18 @@
 	<head>
 		<title>Chessboard</title>
         <link href="chessboard-0.3.0.css" rel="stylesheet" type="text/css"/>
-		
+<!-- toegevoegd ivm mobile view R -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta name=theme-color content=#FBAE17>
 	</head>
 	<body>
-		<div id="board" style="width: 400px">
+			<div id="board" style="width: 95%; max-width:400px"></div>
 			<script src="chessboard-0.3.0.js"></script>
 			<script src="jquery-1.10.1.min.js"></script>
 			<script src="json3.min.js"></script>
 			<script src="chess.js"></script>
 			<script>
-				
+
 			var init = function() {
 
 			var board,
@@ -28,19 +30,19 @@
 					switch (fenstring.charAt(i)) {
 						case 'p':
 						evalutionNumber+=1;
-							break; 
+							break;
 						case 'P':
 						evalutionNumber-=1;
 							break;
 						case 'r':
 						evalutionNumber+=5;
-							break; 
+							break;
 						case 'R':
 						evalutionNumber-=5;
 							break;
 						case 'b':
 						evalutionNumber+=3;
-							break; 
+							break;
 						case 'B':
 						evalutionNumber-=3;
 							break;
@@ -61,16 +63,16 @@
 							break;
 						case 'K':
 						evalutionNumber-=10000;
-							break; 
+							break;
 						case ' ':
 						i=200;
 							break;
-						default: 
+						default:
 						evalutionNumber+=0;
 					}
 				}
 
-				return evalutionNumber; 
+				return evalutionNumber;
 
 			}
 			function minimax(node, depth, maximizingPlayer, scores){
@@ -84,18 +86,18 @@
 					for(i=0; i<children.length; i++){
 						console.log(minimax(node+1+i, 0, false, scores));
 						value = Math.max(value, minimax(node+1+i, 0, false, scores));
-					} 
+					}
 					return value
 					}
 				else
 					var value = 999999999;
 					for (i=0; i<children.length; i++){
 						value = Math.min(value, minimax(node+1+i, 0, true, scores));
-					} 
+					}
 					return value
-					
+
 			}
-			var getBestMove=function () { 				
+			var getBestMove=function () {
 				var scores=[];
 				fakegame= new Chess()
 				var history=game.history();
@@ -109,7 +111,7 @@
 				scores.push(Evaluation(fakegame.fen()));
 				}
 				console.log(scores)
-				var res = minimax(0, 1, true , scores); 
+				var res = minimax(0, 1, true , scores);
 				console.log(res)
 				var bestMoves = scores.filter(myFunction);
 				function myFunction(value) {
@@ -124,8 +126,8 @@
 				game.move(possibleMoves[index]);
 				board.position(game.fen());
 				updateStatus();
-				
-			} 
+
+			}
 			/*= function( depth = 0){
 				var possibleMovesBlack= game.moves();
 				console.log(possibleMovesBlack);
@@ -134,7 +136,7 @@
 				if (possibleMovesBlack===0) return;
 				var i;
 				for(i=0; i<possibleMovesBlack.length; i++){
-					
+
 				}
 				console.log(Evaluations);
 				Evaluations.sort(function(a, b){return a - b});
@@ -150,7 +152,7 @@
 
 			var greySquare = function(square) {
 			var squareEl = $('#board .square-' + square);
-			
+
 			var background = '#a9a9a9';
 			if (squareEl.hasClass('black-3c85d') === true) {
 				background = '#696969';
@@ -190,7 +192,7 @@
 				to: target,
 				promotion: 'q' // NOTE: always promote to a queen for example simplicity
 			});
-			
+
 			// illegal move
 			if (move === null) return 'snapback';
 
@@ -198,7 +200,7 @@
 			  window.setTimeout(getBestMove, 250);
 			  updateStatus();
 			};
-			
+
 			var onSnapEnd = function() {
 			board.position(game.fen());
 			};
@@ -280,7 +282,6 @@
 
 			</script>
 			<img src="img/chesspieces/wikipedia/wP.png" id="3bb7-9e07-b11e-5f0f-e6e3-18c4-c8ad-bfab" alt="" class="piece-417db" data-piece="wP" style="display: none; height: 49px; width: 49px;">
-		</div>
 		<p>Status: <span id="status"></span></p>
 		<p>FEN: <span id="fen"></span></p>
 		<p>PGN: <span id="pgn"></span></p>
