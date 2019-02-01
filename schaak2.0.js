@@ -108,7 +108,8 @@ var init = function(diepte) {
 					} 
 				var children= fakegame.moves();
 				if (children.length==0){
-						value=[Evaluation(game.fen()), movesDone];
+						value=[Evaluation(game.fen()), [movesDone[movesDone.length-1]]];
+						return value 
 					}
 				if (maximizingPlayer) {
 					var value =[-999999999, [0]];
