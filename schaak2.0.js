@@ -1,4 +1,4 @@
-var init = function() {
+var init = function(diepte) {
 			var board,
 			game = new Chess(),
 			statusEl = $('#status'),
@@ -164,7 +164,7 @@ var init = function() {
 				}
 				console.log(scores)
 				*/
-				var res = minimax(0, 2, true , [], -999999999, 999999999); 
+				var res = minimax(0, diepte, true , [], -999999999, 999999999); 
 				console.log(res)
 				/*
 				var bestMoves = scores.filter(myFunction);
