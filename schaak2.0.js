@@ -107,12 +107,12 @@ var init = function(diepte) {
 						fakegame.move(possibleMoves[movesDone[i]]);
 					} 
 				var children= fakegame.moves();
-				
+				if (children.length==0){
+						value=[Evaluation(game.fen()), movesDone];
+					}
 				if (maximizingPlayer) {
 					var value =[-999999999, [0]];
-					if (children.length==0){
-						value=[Evaluation(fakegame.fen()), movesDone];
-					}
+					
 					for(i=0; i<children.length; i++){
 						movesDone[depth-1] = i;
 						newvalue=minimax(node+i, depth-1, false, JSON.parse(JSON.stringify(movesDone)), alpha, beta );
@@ -132,9 +132,6 @@ var init = function(diepte) {
 					}
 				else
 				var value =[999999999, [0]];
-				if (children.length==0){
-						value=[Evaluation(fakegame.fen()), movesDone];
-					}
 					for(i=0; i<children.length; i++){
 						movesDone[depth-1] = i;
 						newvalue=minimax(node+i, depth-1, true, JSON.parse(JSON.stringify(movesDone)), alpha, beta );
