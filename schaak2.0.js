@@ -95,19 +95,24 @@ var init = function(diepte) {
 				}
 				var i;
 				var newvalue=[];
-				for (var i=0; i<movesDone.length; i++){
-						var possibleMoves= game.moves();
-						game.move(possibleMoves[movesDone[movesDone.length-i-1]]);
-					} 
-					var children= game.moves();
-					if (children.length==0){
+				var history2=game.history();
+    fakegame= new Chess();
+    for(var j=0; j<history2.length; j++){
+      fakegame.move(history2[j]);
+    }
+
+    for (var i=0; i<movesDone.length; i++){
+      var possibleMoves= fakegame.moves();
+      //console.log("Depth:"+movesDone)
+      fakegame.move(possibleMoves[movesDone[i]]);
+    }
+
+  var children= fakegame.moves();
+				var children= game.moves();
+				if (children.length==0){
 						value=[Evaluation(game.fen()), [movesDone[movesDone.length-1]]];
 						return value 
 					}
-					for (var i=0; i<movesDone.length; i++){
-						game.undo()
-					} 
-				
 				if (maximizingPlayer) {
 					var value =[-999999999, [0]];
 					
