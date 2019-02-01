@@ -96,19 +96,19 @@ var init = function(diepte) {
 				var i;
 				var newvalue=[];
 				var history2=game.history();
-    fakegame= new Chess();
-    for(var j=0; j<history2.length; j++){
-      fakegame.move(history2[j]);
-    }
+				fakegame= new Chess();
+				for(var j=0; j<history2.length; j++){
+				      fakegame.move(history2[j]);
+				}
 
-    for (var i=0; i<movesDone.length; i++){
-      var possibleMoves= fakegame.moves();
-      //console.log("Depth:"+movesDone)
-      fakegame.move(possibleMoves[movesDone[i]]);
-    }
+				for (var i=0; i<movesDone.length; i++){
+				      var possibleMoves= fakegame.moves();
+				      //console.log("Depth:"+movesDone)
+				      fakegame.move(possibleMoves[movesDone[i]]);
+				    }
 
-  var children= fakegame.moves();
-				var children= game.moves();
+				var children= fakegame.moves();
+
 				if (children.length==0){
 						value=[Evaluation(game.fen()), [movesDone[movesDone.length-1]]];
 						return value 
