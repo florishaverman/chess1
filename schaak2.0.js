@@ -165,9 +165,9 @@ var init = function(diepte) {
 				var tijdna= new Date();
 				var tijdsduur= tijdna.getTime()-tijdvoor.getTime();
 				var aantalzetten=0;
-				var aantalzetten+=1;
+				aantalzetten+=1;
 				var totaledenktijd=0;
-				var totaledenktijd+=tijdsduur;
+				totaledenktijd+=tijdsduur;
 				var gemiddeldetijd= totaledenktijd/aantalzetten;
 				console.log ("het duurde:"+tijdsduur);
 				console.log("de denk tijd was gemiddeld:"+gemiddeldetijd);
