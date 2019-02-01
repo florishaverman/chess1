@@ -162,12 +162,9 @@ var init = function(diepte) {
 				console.log(scores)
 				*/
 				var tijdvoor= new Date();
-				console.log(tijdvoor);
 				var res = minimax(0, diepte, true , [], -999999999, 999999999); 
 				console.log(res);
-				console.log(res);
 				var tijdna= new Date();
-				console.log(tijdna);
 				var tijdsduur= tijdna.getTime()-tijdvoor.getTime();
 				console.log ("het duurde:"+tijdsduur);
 				/*
