@@ -95,22 +95,19 @@ var init = function(diepte) {
 				}
 				var i;
 				var newvalue=[];
-				var history2=game.history();
-					fakegame= new Chess();
-					for(var j=0; j<history2.length; j++){
-						fakegame.move(history2[j]);
-					}
-				
-					for (var i=0; i<movesDone.length; i++){
-						var possibleMoves= fakegame.moves();
-						//console.log("Depth:"+movesDone)
-						fakegame.move(possibleMoves[movesDone[i]]);
+				for (var i=0; i<movesDone.length; i++){
+						var possibleMoves= game.moves();
+						game.move(possibleMoves[movesDone[movesDone.length-i-1]]);
 					} 
-				var children= fakegame.moves();
-				if (children.length==0){
-						value=[Evaluation(fakegame.fen()), [movesDone[movesDone.length-1]]];
+					var children= game.moves();
+					if (children.length==0){
+						value=[Evaluation(game.fen()), [movesDone[movesDone.length-1]]];
 						return value 
 					}
+					for (var i=0; i<movesDone.length; i++){
+						game.undo()
+					} 
+				
 				if (maximizingPlayer) {
 					var value =[-999999999, [0]];
 					
@@ -167,7 +164,13 @@ var init = function(diepte) {
 				console.log(res);
 				var tijdna= new Date();
 				var tijdsduur= tijdna.getTime()-tijdvoor.getTime();
+				var aantalzetten=0;
+				var aantalzetten+=1;
+				var totaledenktijd=0;
+				var totaledenktijd+=tijdsduur;
+				var gemiddeldetijd= totaledenktijd/aantalzetten;
 				console.log ("het duurde:"+tijdsduur);
+				console.log("de denk tijd was gemiddeld:"+gemiddeldetijd);
 				/*
 				var bestMoves = scores.filter(myFunction);
 				function myFunction(value) {
