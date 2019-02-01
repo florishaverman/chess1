@@ -161,8 +161,13 @@ var init = function(diepte) {
 				}
 				console.log(scores)
 				*/
+				var tijdvoor= new Date();
+				
 				var res = minimax(0, diepte, true , [], -999999999, 999999999); 
 				console.log(res)
+				var tijdna= new Date();
+				var tijdsduur= tijdna.getTime()-tijdvoor.getTime();
+				console.log ("het duurde:"+tijdsduur);
 				/*
 				var bestMoves = scores.filter(myFunction);
 				function myFunction(value) {
