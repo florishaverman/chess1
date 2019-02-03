@@ -149,33 +149,19 @@ var init = function(diepte) {
 					return value
 					
 			}
+			var aantalzetten=0;
+			var totaledenktijd=0;
 			var getBestMove=function () { 				
-				/*
-				var scores=[];
-				var history=game.history();
-				var possibleMoves= game.moves();
-				for(i=0; i<possibleMoves.length; i++){
-				fakegame= new Chess();
-					for(var j=0; j<history.length; j++){
-						fakegame.move(history[j]);
-					}
-				fakegame.move(possibleMoves[i]);
-				scores.push(Evaluation(fakegame.fen()));
-				}
-				console.log(scores)
-				*/
 				var tijdvoor= new Date();
 				var res = minimax(0, diepte, true , [], -999999999, 999999999); 
 				console.log(res);
 				var tijdna= new Date();
 				var tijdsduur= tijdna.getTime()-tijdvoor.getTime();
-				var aantalzetten=0;
 				aantalzetten+=1;
-				var totaledenktijd=0;
 				totaledenktijd+=tijdsduur;
 				var gemiddeldetijd= totaledenktijd/aantalzetten;
 				console.log ("het duurde:"+tijdsduur);
-				console.log("de denk tijd was gemiddeld:"+gemiddeldetijd);
+				console.log("de denk tijd is gemiddeld:"+gemiddeldetijd);
 				/*
 				var bestMoves = scores.filter(myFunction);
 				function myFunction(value) {
