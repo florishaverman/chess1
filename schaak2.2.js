@@ -5,20 +5,37 @@ var init = function(diepte) {
     fenEl = $('#fen'),
     pgnEl = $('#pgn');
     function Evaluation (fenstring){
-        var evalutionNumber=0;
-        //console.log(game.SQUARES[0]);
-        //console.log(game.get('a2').type);
-        //console.log(game);
+       var evalutionNumber=0;
        for(var i=0; i<64; i++){
             var square=game.SQUARES[i];
-            console.log(String(square))
-            var poss='a8'
-            var pos=poss.replace(poss,String(square));
-            //game.get('a2').type
+            //console.log(square[1]);
+            var pos=String(square);
             if(!(game.get(pos)==null)){
-                //if(game.get(pos).color)
+                var tvalue=1;
+                var pvalue=0;
+                if(square[1]=='3'||square[1]=='4'||square[1]=='5'||square[1]=='6'){pvalue+=0.1}
+                if(game.get(pos).color=='w'){tvalue*=-1};
+                switch (game.get(pos).type) {
+                case 'p':
+                evalutionNumber+=1*tvalue+pvalue*tvalue;
+                    break; 
+                case 'r':
+                evalutionNumber+=5*tvalue+pvalue*tvalue;
+                    break;
+                case 'b':
+                evalutionNumber+=3*tvalue+pvalue*tvalue;
+                    break; 
+                case 'n':
+                evalutionNumber+=3*tvalue+pvalue*tvalue;
+                    break;
+                case 'q':
+                evalutionNumber+=9*tvalue+pvalue*tvalue;
+                    break;
+                default: 
+                evalutionNumber+=0;
+                }
             }
-            console.log(game.get(pos));
+            
         }
         
         if (game.in_checkmate() === true & game.turn() === 'b') {
@@ -27,7 +44,7 @@ var init = function(diepte) {
         if (game.in_checkmate() === true & game.turn() === 'w') {
             evalutionNumber = 99999;
         }
-
+        //console.log(evalutionNumber);   
         return evalutionNumber; 
     }
     
