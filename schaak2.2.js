@@ -1,10 +1,14 @@
+function myFunction(){
+                game.undo()
+                game.undo()
+            }
 var init = function(diepte) {
     var board,
     game = new Chess(),
     statusEl = $('#status'),
     fenEl = $('#fen'),
     pgnEl = $('#pgn');
-    function Evaluation (fenstring){
+    function Evaluation (){
        var evalutionNumber=0;
        for(var i=0; i<64; i++){
             var square=game.SQUARES[i];
@@ -14,22 +18,24 @@ var init = function(diepte) {
                 var tvalue=1;
                 var pvalue=0;
                 if(square[1]=='3'||square[1]=='4'||square[1]=='5'||square[1]=='6'){pvalue+=0.1}
+                if((square[0]=='c'||square[0]=='d'||square[0]=='e'||square[0]=='f')&
+                   (square[1]=='3'||square[1]=='4'||square[1]=='5'||square[1]=='6')){pvalue+=0.1}
                 if(game.get(pos).color=='w'){tvalue*=-1};
                 switch (game.get(pos).type) {
                 case 'p':
-                evalutionNumber+=1*tvalue+pvalue*tvalue;
+                evalutionNumber+=(1+pvalue)*tvalue;
                     break; 
                 case 'r':
-                evalutionNumber+=5*tvalue+pvalue*tvalue;
+                evalutionNumber+=(5+pvalue)*tvalue;
                     break;
                 case 'b':
-                evalutionNumber+=3*tvalue+pvalue*tvalue;
+                evalutionNumber+=(3+pvalue)*tvalue;
                     break; 
                 case 'n':
-                evalutionNumber+=3*tvalue+pvalue*tvalue;
+                evalutionNumber+=(3+pvalue)*tvalue;
                     break;
                 case 'q':
-                evalutionNumber+=9*tvalue+pvalue*tvalue;
+                evalutionNumber+=(9+pvalue)*tvalue;
                     break;
                 default: 
                 evalutionNumber+=0;
@@ -55,7 +61,7 @@ var init = function(diepte) {
                 //	console.log("Depth:"+movesDone)
                 game.move(possibleMoves[movesDone[i]]);
             } 
-            evaluationValue= Evaluation(game.fen());
+            evaluationValue= Evaluation();
             for (var i=0; i<movesDone.length; i++){
                 game.undo()
             } 
@@ -71,7 +77,7 @@ var init = function(diepte) {
         } 
         var children= game.moves();
         if (children.length==0){
-                value=[Evaluation(game.fen()), [movesDone[0]]];
+                value=[Evaluation(), [movesDone[0]]];
                 return value 
             }
         for (var i=0; i<movesDone.length; i++){
@@ -91,14 +97,11 @@ var init = function(diepte) {
                 }
                 if(newvalue[0]>value[0]){
                     value[0]= newvalue[0];
-                    value[1]= [newvalue[1][0]]
+                    value[1]= [newvalue[1][0]];
                 }
-                //alpha=Math.max(alpha, value[0]);
-                //if(alpha >= beta){break;}
-                
-                
-                //value = Math.max(value[0], minimax(node+1+i, depth-1, false, movesDone.push(i))[0]);
-            }
+                //alpha=value[0];
+                //if(alpha <= beta){return value}
+              }
             return value
             }
         else
@@ -111,13 +114,12 @@ var init = function(diepte) {
                   value[1].push(newvalue[1][0]);
                 }
                 if(newvalue[0]<value[0]){
-                    value= newvalue;
+                    value[0]= newvalue[0];
+                    value[1]= [newvalue[1][0]];
                 }
-                //console.log(value[1]);
-                //beta=Math.max(beta, value[0])
-                //if(alpha <= beta){break;}
-                //value = Math.max(value[0], minimax(node+1+i, depth-1, false, movesDone.push(i))[0]);
-            } 
+                beta=value[0];
+                if(beta<alpha){return value}
+                } 
             return value
             
     }
@@ -151,7 +153,8 @@ var init = function(diepte) {
         game.move(possibleMoves[res[1][randomIndex]]);
         board.position(game.fen());
         updateStatus();
-       
+        //console.log(game.history()[game.history().length-2]);
+       //console.log(game);
 
     } 
     /*= function( depth = 0){
