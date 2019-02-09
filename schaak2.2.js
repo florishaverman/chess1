@@ -1,7 +1,3 @@
-function myFunction(){
-                game.undo()
-                game.undo()
-            }
 var init = function(diepte) {
     var board,
     game = new Chess(),
