@@ -5,49 +5,50 @@ var init = function(diepte) {
     fenEl = $('#fen'),
     pgnEl = $('#pgn');
     function Evaluation (){
-       var evalutionNumber=0;
+       var evaluationNumber=0;
        for(var i=0; i<64; i++){
             var square=game.SQUARES[i];
             //console.log(square[1]);
             var pos=String(square);
+            if (game.in_checkmate() === true & game.turn() === 'b') {evaluationNumber += -99999}
+            if (game.in_checkmate() === true & game.turn() === 'w') {evaluationNumber += 99999}
             if(!(game.get(pos)==null)){
                 var tvalue=1;
                 var pvalue=0;
+                if(game.get(pos).color=='w'){tvalue*=-1};
+                if(((square[1]=='6'&game.get(pos).color=='w')||(square[1]=='2'&game.get(pos).color=='b'))&game.get(pos).type=='p'){pvalue+=0.5*tvalue}
+                if(((square[1]=='7'&game.get(pos).color=='w')||(square[1]=='1'&game.get(pos).color=='b'))&game.get(pos).type=='p'){pvalue+=1*tvalue}
                 if(square[1]=='3'||square[1]=='4'||square[1]=='5'||square[1]=='6'){pvalue+=0.1}
                 if((square[0]=='c'||square[0]=='d'||square[0]=='e'||square[0]=='f')&
                    (square[1]=='3'||square[1]=='4'||square[1]=='5'||square[1]=='6')){pvalue+=0.1}
-                if(game.get(pos).color=='w'){tvalue*=-1};
+                
                 switch (game.get(pos).type) {
                 case 'p':
-                evalutionNumber+=(1+pvalue)*tvalue;
+                evaluationNumber+=(1+pvalue)*tvalue;
                     break; 
                 case 'r':
-                evalutionNumber+=(5+pvalue)*tvalue;
+                evaluationNumber+=(5+pvalue)*tvalue;
                     break;
                 case 'b':
-                evalutionNumber+=(3+pvalue)*tvalue;
+                evaluationNumber+=(3+pvalue)*tvalue;
                     break; 
                 case 'n':
-                evalutionNumber+=(3+pvalue)*tvalue;
+                evaluationNumber+=(3+pvalue)*tvalue;
                     break;
                 case 'q':
-                evalutionNumber+=(9+pvalue)*tvalue;
+                evaluationNumber+=(9+pvalue)*tvalue;
                     break;
                 default: 
-                evalutionNumber+=0;
+                evaluationNumber+=0;
                 }
             }
             
         }
         
-        if (game.in_checkmate() === true & game.turn() === 'b') {
-            evalutionNumber = -99999;
-        }
-        if (game.in_checkmate() === true & game.turn() === 'w') {
-            evalutionNumber = 99999;
-        }
-        //console.log(evalutionNumber);   
-        return evalutionNumber; 
+        
+        evaluationNumber=Math.round(evaluationNumber * 100) / 100;
+        //console.log(evaluationNumber);   
+        return evaluationNumber; 
     }
     
     function minimax(maxdepth, depth, maximizingPlayer, movesDone, alpha, beta){
