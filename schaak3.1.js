@@ -4,35 +4,7 @@ var init = function(diepte) {
     statusEl = $('#status'),
     fenEl = $('#fen'),
     pgnEl = $('#pgn');
-    function Evaluation (){
-        var evaluationNumber=0;
-        for(var i=0; i<64; i++){
-             var square=game.SQUARES[i];
-             //console.log(square);
-             var pos=String(square);
-             if (game.in_checkmate() === true & game.turn() === 'b') {evaluationNumber += -99999}
-             if (game.in_checkmate() === true & game.turn() === 'w') {evaluationNumber += 99999}
-             if(!(game.get(pos)==null)){
-                 var tvalue=1;
-                 var pvalue=0;
-                 if(game.get(pos).color=='w'){tvalue*=-1};
-                 //if(((square[1]=='6'&game.get(pos).color=='w')||(square[1]=='2'&game.get(pos).color=='b'))&game.get(pos).type=='p'){pvalue+=0.5*tvalue}
-                 //if(((square[1]=='7'&game.get(pos).color=='w')||(square[1]=='1'&game.get(pos).color=='b'))&game.get(pos).type=='p'){pvalue+=1*tvalue}
-                 //if(square[1]=='3'||square[1]=='4'||square[1]=='5'||square[1]=='6'){pvalue+=0.1}
-                 //if((square[0]=='c'||square[0]=='d'||square[0]=='e'||square[0]=='f')&
-                 //   (square[1]=='3'||square[1]=='4'||square[1]=='5'||square[1]=='6')){pvalue+=0.1}
- 
-                 if((game.get(pos).type=='p')&(game.get(pos).color=='w')){evaluationNumber-=PawnTable[i]}
-                 if((game.get(pos).type=='p')&(game.get(pos).color=='b')){evaluationNumber+=PawnTable[63-i]}
- 
-                 if(game.get(pos).type=='n'){evaluationNumber+=KnightTable[i]*tvalue}
- 
-                 if((game.get(pos).type=='b')&(game.get(pos).color=='w')){evaluationNumber-=BishopTable[i]}
-                 if((game.get(pos).type=='b')&(game.get(pos).color=='w')){evaluationNumber+=BishopTable[63-i]}
- 
-                 if((game.get(pos).type=='k')&(game.get(pos).color=='w')){evaluationNumber-=KingTable[i]}
-                 if((game.get(pos).type=='k')&(game.get(pos).color=='b')){evaluationNumber+=KingTable[63-i]}
-                 var PawnTable = 
+    var PawnTable = 
                  [
                  0,  0,  0,  0,  0,  0,  0,  0,
                  50, 50, 50, 50, 50, 50, 50, 50,
@@ -92,6 +64,36 @@ var init = function(diepte) {
                  20,  20,   0,   0,   0,   0,  20,  20,
                  20,  30,  10,   0,   0,  10,  30,  20
                  ];
+    function Evaluation (){
+        var evaluationNumber=0;
+        for(var i=0; i<64; i++){
+             var square=game.SQUARES[i];
+             //console.log(square);
+             var pos=String(square);
+             if (game.in_checkmate() === true & game.turn() === 'b') {evaluationNumber += -99999}
+             if (game.in_checkmate() === true & game.turn() === 'w') {evaluationNumber += 99999}
+             if(!(game.get(pos)==null)){
+                 var tvalue=1;
+                 var pvalue=0;
+                 if(game.get(pos).color=='w'){tvalue*=-1};
+                 //if(((square[1]=='6'&game.get(pos).color=='w')||(square[1]=='2'&game.get(pos).color=='b'))&game.get(pos).type=='p'){pvalue+=0.5*tvalue}
+                 //if(((square[1]=='7'&game.get(pos).color=='w')||(square[1]=='1'&game.get(pos).color=='b'))&game.get(pos).type=='p'){pvalue+=1*tvalue}
+                 //if(square[1]=='3'||square[1]=='4'||square[1]=='5'||square[1]=='6'){pvalue+=0.1}
+                 //if((square[0]=='c'||square[0]=='d'||square[0]=='e'||square[0]=='f')&
+                 //   (square[1]=='3'||square[1]=='4'||square[1]=='5'||square[1]=='6')){pvalue+=0.1}
+ 
+                 if((game.get(pos).type=='p')&(game.get(pos).color=='w')){evaluationNumber-=PawnTable[i]}
+                 if((game.get(pos).type=='p')&(game.get(pos).color=='b')){evaluationNumber+=PawnTable[63-i]}
+ 
+                 if((game.get(pos).type=='n')&(game.get(pos).color=='w')){evaluationNumber-=KnightTable[i]}
+                 if((game.get(pos).type=='n')&(game.get(pos).color=='b')){evaluationNumber+=KnightTable[63-i]}
+
+                 if((game.get(pos).type=='b')&(game.get(pos).color=='w')){evaluationNumber-=BishopTable[i]}
+                 if((game.get(pos).type=='b')&(game.get(pos).color=='w')){evaluationNumber+=BishopTable[63-i]}
+ 
+                 if((game.get(pos).type=='k')&(game.get(pos).color=='w')){evaluationNumber-=KingTable[i]}
+                 if((game.get(pos).type=='k')&(game.get(pos).color=='b')){evaluationNumber+=KingTable[63-i]}
+                 
                  
                  switch (game.get(pos).type) {
                  case 'p':
@@ -169,15 +171,15 @@ var init = function(diepte) {
         // kijken of zwart aan zet is. wij hebben gebruikt dat zwart streeft naar een maximale score
          if (maximizingPlayer) {
              var value =[-999999999, []];
-             console.log(children.length);
-             console.log(game.moves());
+             //console.log(children.length);
+             //console.log(game.moves());
              // we moeten voor elke zet gaan kijken dus een for loop
              for(i=0; i<children.length; i++){
                  // we zettten het nummer van de zet die we doen toe in movesDone om te gebruiken bij het klaarmaken voor evaluatie functie
                  movesDone[depth] = i;
                  // we gebruiken een functie in een fucntie. roepen de minimax dus weer aan.
                  newvalue=minimax(maxdepth, depth+1, false, JSON.parse(JSON.stringify(movesDone)), alphabeta);
-                console.log(newvalue);
+                //console.log(newvalue);
                 // kijken of de nieuwe waarde die we gevonden hebben gelijk is aan de beste waarde tot nu toe.
                 // We willen namelijk dat als twee zetten even goed zijn dat we dan random willen kiezen welke zet we doen.
                  if(newvalue[0]==value[0]){
@@ -191,8 +193,8 @@ var init = function(diepte) {
                  calphabeta[depth]=value[0];
                  /*
                  if(!(depth==0)){
-                     //if(calphabeta[depth]<=calphabeta[depth-1]){ //               console.log(calphabeta[depth]+ "<" +calphabeta[depth-1]+ "i="+i );
-                      //   return value}
+                     //if(calphabeta[depth]>=calphabeta[depth-1]){console.log("gebruikt")
+                       return value}
                      }
                  alphabeta=calphabeta;
                  */
@@ -217,7 +219,7 @@ var init = function(diepte) {
                  calphabeta[depth]=newvalue[0];
                  //console.log(calphabeta[depth]+ "<" +calphabeta[depth-1]+ "i="+movesDone)
                  
-                 if(calphabeta[depth]<calphabeta[depth-1]){console.log("gebruikt");
+                 if(calphabeta[depth]<calphabeta[depth-1]){//console.log("gebruikt");
                       return value}
                  alphabeta=calphabeta;
                  
