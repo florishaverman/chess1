@@ -33,7 +33,7 @@ var init = function(diepte) {
                  [
                  -50,-40,-30,-30,-30,-30,-40,-50,
                  -40,-20,  0,  0,  0,  0,-20,-40,
-                 -30,  0, 10, 15, 15, 10,  0,-30,
+                 -30,  0, 10, 15, 15, ,  0,-30,
                  -30,  5, 15, 20, 20, 15,  5,-30,
                  -30,  0, 15, 20, 20, 15,  0,-30,
                  -30,  5, 10, 15, 15, 10,  5,-30,
@@ -70,8 +70,8 @@ var init = function(diepte) {
              var square=game.SQUARES[i];
              //console.log(square);
              var pos=String(square);
-             if (game.in_checkmate() === true & game.turn() === 'b') {evaluationNumber += -99999}
-             if (game.in_checkmate() === true & game.turn() === 'w') {evaluationNumber += 99999}
+             if (game.in_checkmate() === true & game.turn() === 'b') {evaluationNumber += -999999}
+             if (game.in_checkmate() === true & game.turn() === 'w') {evaluationNumber += 999999}
              if(!(game.get(pos)==null)){
                  var tvalue=1;
                  var pvalue=0;
@@ -93,6 +93,9 @@ var init = function(diepte) {
  
                  if((game.get(pos).type=='k')&(game.get(pos).color=='w')){evaluationNumber-=KingTable[i]}
                  if((game.get(pos).type=='k')&(game.get(pos).color=='b')){evaluationNumber+=KingTable[63-i]}
+                 
+                 if((game.get(pos).type=='r')&(game.get(pos).color=='w')){evaluationNumber-=RookTable[i]}
+                 if((game.get(pos).type=='r')&(game.get(pos).color=='b')){evaluationNumber+=RookTable[63-i]}
                  
                  
                  switch (game.get(pos).type) {
@@ -130,6 +133,7 @@ var init = function(diepte) {
          // als de diepte gelijk is aan de diepte die je wil kijken moeten we de evoluatie functie gebruiken.
          // we moeten doorvoor eerst de zetten doen die we in movesDone hebben gezet, anders is het bord immers niet veranderd.
          if(depth==maxdepth){
+             var history= game.history()
              // doe de zetten die je wilt bekijken
              for (var i=0; i<movesDone.length; i++){
                  var possibleMoves= game.moves();
@@ -141,7 +145,7 @@ var init = function(diepte) {
              // de zetten terug
              for (var i=0; i<movesDone.length; i++){
                  game.undo()
-             } 
+             }
              var returnValue= [evaluationValue, [movesDone[0]]];
              return returnValue
          }
@@ -161,6 +165,9 @@ var init = function(diepte) {
          // als er geen mogelijke zetten zijn dat is het dan is het mat of pat.
          if (children.length==0){
                  value=[Evaluation(), [movesDone[0]]];
+                 for (var i=0; i<movesDone.length; i++){
+                    game.undo()
+                 }
                  return value 
              }
          // doe de zetten weer terug
