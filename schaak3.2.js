@@ -76,12 +76,7 @@ var init = function(diepte) {
                  var tvalue=1;
                  var pvalue=0;
                  if(game.get(pos).color=='w'){tvalue*=-1};
-                 //if(((square[1]=='6'&game.get(pos).color=='w')||(square[1]=='2'&game.get(pos).color=='b'))&game.get(pos).type=='p'){pvalue+=0.5*tvalue}
-                 //if(((square[1]=='7'&game.get(pos).color=='w')||(square[1]=='1'&game.get(pos).color=='b'))&game.get(pos).type=='p'){pvalue+=1*tvalue}
-                 //if(square[1]=='3'||square[1]=='4'||square[1]=='5'||square[1]=='6'){pvalue+=0.1}
-                 //if((square[0]=='c'||square[0]=='d'||square[0]=='e'||square[0]=='f')&
-                 //   (square[1]=='3'||square[1]=='4'||square[1]=='5'||square[1]=='6')){pvalue+=0.1}
- 
+                 
                  if((game.get(pos).type=='p')&(game.get(pos).color=='w')){evaluationNumber-=PawnTable[i]}
                  if((game.get(pos).type=='p')&(game.get(pos).color=='b')){evaluationNumber+=PawnTable[63-i]}
  
@@ -89,7 +84,7 @@ var init = function(diepte) {
                  if((game.get(pos).type=='n')&(game.get(pos).color=='b')){evaluationNumber+=KnightTable[63-i]}
 
                  if((game.get(pos).type=='b')&(game.get(pos).color=='w')){evaluationNumber-=BishopTable[i]}
-                 if((game.get(pos).type=='b')&(game.get(pos).color=='w')){evaluationNumber+=BishopTable[63-i]}
+                 if((game.get(pos).type=='b')&(game.get(pos).color=='b')){evaluationNumber+=BishopTable[63-i]}
  
                  if((game.get(pos).type=='k')&(game.get(pos).color=='w')){evaluationNumber-=KingTable[i]}
                  if((game.get(pos).type=='k')&(game.get(pos).color=='b')){evaluationNumber+=KingTable[63-i]}
