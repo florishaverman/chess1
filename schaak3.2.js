@@ -193,7 +193,7 @@ var init = function(diepte) {
                  calphabeta[depth]=value[0];
                  
                  if(!(depth==0)){
-                     if(newvalue[0]>=calphabeta[depth-1]){console.log("gebruikt")
+                     if(newvalue[0]>=calphabeta[depth-1]){//console.log("gebruikt")
                        return value}
                      }
                  alphabeta=calphabeta;
@@ -219,7 +219,7 @@ var init = function(diepte) {
                  calphabeta[depth]=value[0];
                  //console.log(calphabeta[depth]+ "<" +calphabeta[depth-1]+ "i="+movesDone)
                  
-                 if(newvalue[0]<calphabeta[depth-1]){console.log("gebruikt2");
+                 if(newvalue[0]<calphabeta[depth-1]){//console.log("gebruikt2");
                       return value}
                  alphabeta=calphabeta;
                  
