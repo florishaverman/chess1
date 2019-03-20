@@ -128,7 +128,6 @@ var init = function(diepte) {
          // als de diepte gelijk is aan de diepte die je wil kijken moeten we de evoluatie functie gebruiken.
          // we moeten doorvoor eerst de zetten doen die we in movesDone hebben gezet, anders is het bord immers niet veranderd.
          if(depth==maxdepth){
-             var history= game.history()
              // doe de zetten die je wilt bekijken
              for (var i=0; i<movesDone.length; i++){
                  var possibleMoves= game.moves();
@@ -160,9 +159,7 @@ var init = function(diepte) {
          // als er geen mogelijke zetten zijn dat is het dan is het mat of pat.
          if (children.length==0){
                  value=[Evaluation(), [movesDone[0]]];
-                 for (var i=0; i<movesDone.length; i++){
-                    game.undo()
-                 }
+                 for (var i=0; i<movesDone.length; i++){game.undo()}
                  return value 
              }
          // doe de zetten weer terug
