@@ -1,0 +1,304 @@
+var init = function(dieptew, dieptez) {
+    var board,
+    game = new Chess(),
+    statusEl = $('#status'),
+    fenEl = $('#fen'),
+    pgnEl = $('#pgn');
+    
+    var PawnTable = 
+                 [
+                 0,  0,  0,  0,  0,  0,  0,  0,
+                 50, 50, 50, 50, 50, 50, 50, 50,
+                 10, 10, 20, 30, 30, 20, 10, 10,
+                 5,  5, 10, 27, 27, 10,  5,  5,
+                 0,  0,  0, 25, 25,  0,  0,  0,
+                 5, -5,-10,  0,  0,-10, -5,  5,
+                 5, 10, 10,-25,-25, 10, 10,  5,
+                 0,  0,  0,  0,  0,  0,  0,  0
+                 ];
+             
+             var RookTable =
+                 [
+                 -50,-40,-30,-30,-30,-30,-40,-50,
+                 -40,-20,  0,  0,  0,  0,-20,-40,
+                 -30,  5, 10, 15, 15, 10,  5,-30,
+                 -30,  5, 15, 20, 20, 15,  5,-30,
+                 -30,  5, 15, 20, 20, 15,  5,-30,
+                 -30,  5, 10, 15, 15, 10,  5,-30,
+                 -40,-20,  0,  5,  5,  0,-20,-40,
+                 -50,-40,-20,-30,-30,-20,-40,-50
+                 ];
+             
+                 
+             var KnightTable =
+                 [
+                 -50,-40,-30,-30,-30,-30,-40,-50,
+                 -40,-20,  0,  0,  0,  0,-20,-40,
+                 -30,  0, 10, 15, 15, ,  0,-30,
+                 -30,  5, 15, 20, 20, 15,  5,-30,
+                 -30,  0, 15, 20, 20, 15,  0,-30,
+                 -30,  5, 10, 15, 15, 10,  5,-30,
+                 -40,-20,  0,  5,  5,  0,-20,-40,
+                 -50,-40,-20,-30,-30,-20,-40,-50
+                 ];
+                 
+             var BishopTable = 
+                 [
+                 -20,-10,-10,-10,-10,-10,-10,-20,
+                 -10,  0,  0,  0,  0,  0,  0,-10,
+                 -10,  0,  5, 10, 10,  5,  0,-10,
+                 -10,  5,  5, 10, 10,  5,  5,-10,
+                 -10,  0, 10, 10, 10, 10,  0,-10,
+                 -10, 10, 10, 10, 10, 10, 10,-10,
+                 -10,  5,  0,  0,  0,  0,  5,-10,
+                 -20,-10,-40,-10,-10,-40,-10,-20
+                 ];
+                 
+             var KingTable = 
+                 [
+                 -30, -40, -40, -50, -50, -40, -40, -30,
+                 -30, -40, -40, -50, -50, -40, -40, -30,
+                 -30, -40, -40, -50, -50, -40, -40, -30,
+                 -30, -40, -40, -50, -50, -40, -40, -30,
+                 -20, -30, -30, -40, -40, -30, -30, -20,
+                 -10, -20, -20, -20, -20, -20, -20, -10, 
+                 20,  20,   0,   0,   0,   0,  20,  20,
+                 20,  30,  10,   0,   0,  10,  30,  20
+                 ];
+    function Evaluation (){
+        var evaluationNumber=0;
+        for(var i=0; i<64; i++){
+             var square=game.SQUARES[i];
+             //console.log(square);
+             var pos=String(square);
+             if(!(game.get(pos)==null)){
+                 var tvalue=1;
+                 var pvalue=0;
+                 if(game.get(pos).color=='w'){tvalue*=-1};
+                 
+                 if((game.get(pos).type=='p')&(game.get(pos).color=='w')){evaluationNumber-=PawnTable[i]}
+                 if((game.get(pos).type=='p')&(game.get(pos).color=='b')){evaluationNumber+=PawnTable[63-i]}
+ 
+                 if((game.get(pos).type=='n')&(game.get(pos).color=='w')){evaluationNumber-=KnightTable[i]}
+                 if((game.get(pos).type=='n')&(game.get(pos).color=='b')){evaluationNumber+=KnightTable[63-i]}
+
+                 if((game.get(pos).type=='b')&(game.get(pos).color=='w')){evaluationNumber-=BishopTable[i]}
+                 if((game.get(pos).type=='b')&(game.get(pos).color=='b')){evaluationNumber+=BishopTable[63-i]}
+ 
+                 if((game.get(pos).type=='k')&(game.get(pos).color=='w')){evaluationNumber-=KingTable[i]}
+                 if((game.get(pos).type=='k')&(game.get(pos).color=='b')){evaluationNumber+=KingTable[63-i]}
+                 
+                 if((game.get(pos).type=='r')&(game.get(pos).color=='w')){evaluationNumber-=RookTable[i]}
+                 if((game.get(pos).type=='r')&(game.get(pos).color=='b')){evaluationNumber+=RookTable[63-i]}
+                 
+                 
+                 switch (game.get(pos).type) {
+                 case 'p':
+                 evaluationNumber+=(100+pvalue)*tvalue;
+                     break; 
+                 case 'r':
+                 evaluationNumber+=(500+pvalue)*tvalue;
+                     break;
+                 case 'b':
+                 evaluationNumber+=(325+pvalue)*tvalue;
+                     break; 
+                 case 'n':
+                 evaluationNumber+=(320+pvalue)*tvalue;
+                     break;
+                 case 'q':
+                 evaluationNumber+=(975+pvalue)*tvalue;
+                     break;
+                 default: 
+                 evaluationNumber+=0;
+                 }
+             }
+             
+         }
+         if (game.in_checkmate() === true & game.turn() === 'b') {evaluationNumber += -999999}
+         if (game.in_checkmate() === true & game.turn() === 'w') {evaluationNumber += 999999}
+         if(game.in_draw() === true){evaluationNumber = 0}
+         evaluationNumber=Math.round(evaluationNumber * 100) / 100;
+         //console.log(evaluationNumber);   
+         return evaluationNumber; 
+     }
+     var calphabeta=[-999999999, 999999999, -999999999];
+    
+     function minimax(maxdepth, depth, maximizingPlayer, movesDone, alphabeta){
+         if (depth==0){ calphabeta=alphabeta}
+         // als de diepte gelijk is aan de diepte die je wil kijken moeten we de evoluatie functie gebruiken.
+         // we moeten doorvoor eerst de zetten doen die we in movesDone hebben gezet, anders is het bord immers niet veranderd.
+         if(depth==maxdepth){
+             // doe de zetten die je wilt bekijken
+             for (var i=0; i<movesDone.length; i++){
+                 var possibleMoves= game.moves();
+                 //	console.log("Depth:"+movesDone)
+                 game.move(possibleMoves[movesDone[i]]);
+             } 
+             // evalueer
+             evaluationValue= Evaluation();
+             // de zetten terug
+             for (var i=0; i<movesDone.length; i++){
+                 game.undo()
+             }
+             var returnValue= [evaluationValue, [movesDone[0]]];
+             return returnValue
+         }
+         var i;
+         var newvalue=[];
+         /*  Hoeveel mogelijke zetten wit kan doen hangt af van de zet die zwart heeft gedaan
+         dus om te kijken welke zetten wit kan zetten moeten we eerst de zet van zwart doen.
+         */
+        // doe de zetten tot nu toe gedaan
+         for (var i=0; i<movesDone.length; i++){
+             var possibleMoves= game.moves();
+             //	console.log("Depth:"+movesDone)
+             game.move(possibleMoves[movesDone[i]]);
+         } 
+         // kijk hoeveel zetten wit/zwart kan doen
+         var children= game.moves();
+         // als er geen mogelijke zetten zijn dat is het dan is het mat of pat.
+         if (children.length==0){
+                 value=[Evaluation(), [movesDone[0]]];
+                 for (var i=0; i<movesDone.length; i++){game.undo()}
+                 return value 
+             }
+         // doe de zetten weer terug
+         for (var i=0; i<movesDone.length; i++){
+             game.undo()
+         } 
+ 
+        // kijken of zwart aan zet is. wij hebben gebruikt dat zwart streeft naar een maximale score
+         if (maximizingPlayer) {
+             var value =[-999999999, []];
+             //console.log(children.length);
+             //console.log(game.moves());
+             // we moeten voor elke zet gaan kijken dus een for loop
+             for(i=0; i<children.length; i++){
+                 // we zettten het nummer van de zet die we doen toe in movesDone om te gebruiken bij het klaarmaken voor evaluatie functie
+                 movesDone[depth] = i;
+                 // we gebruiken een functie in een fucntie. roepen de minimax dus weer aan.
+                 newvalue=minimax(maxdepth, depth+1, false, JSON.parse(JSON.stringify(movesDone)), alphabeta);
+                //console.log(newvalue);
+                // kijken of de nieuwe waarde die we gevonden hebben gelijk is aan de beste waarde tot nu toe.
+                // We willen namelijk dat als twee zetten even goed zijn dat we dan random willen kiezen welke zet we doen.
+                 if(newvalue[0]==value[0]){
+                     value[1].push(newvalue[1][0]);
+                 }
+                 // als een zet een beter is dat alle voorgaande zetten dan worden alle voorgaande zetten verwijderd en deze onthouden.
+                 if(newvalue[0]>value[0]){
+                     value[0]= newvalue[0];
+                     value[1]= [newvalue[1][0]];
+                 }
+                 calphabeta[depth]=value[0];
+                 
+                 if(!(depth==0)){
+                     if(newvalue[0]>=calphabeta[depth-1]){//console.log("gebruikt")
+                       return value}
+                     }
+                 alphabeta=calphabeta;
+                 
+               }
+             return value
+             }
+             // else is wit aan zet dus willen we een zo laag mogelijke waarde. dus is heel vergelijkbaar met hier boven maar dan andersom.
+         else            
+             //console.log(children.length);
+             var value =[999999999, []];
+             for(i=0; i<children.length; i++){
+                 movesDone[depth] = i;
+                 newvalue=minimax(maxdepth, depth+1, true, JSON.parse(JSON.stringify(movesDone)), alphabeta);
+                 //console.log(i);
+                 if(newvalue[0]==value[0]){
+                   value[1].push(newvalue[1][0]);
+                 }
+                 if(newvalue[0]<value[0]){
+                     value[0]= newvalue[0];
+                     value[1]= [newvalue[1][0]];
+                 }
+                 calphabeta[depth]=value[0];
+                 //console.log(calphabeta[depth]+ "<" +calphabeta[depth-1]+ "i="+movesDone)
+                 if(!(depth==0)){
+                 if(newvalue[0]<calphabeta[depth-1]){//console.log("gebruikt2");
+                      return value}
+                 }
+                 alphabeta=calphabeta;
+                 
+             } 
+             return value
+             
+     }
+    var aantalzetten=0;
+    var totaledenktijd=0;
+    function getBestMove (diepte) { 				
+        var tijdvoor= new Date();
+        if(game.turn() === 'b'){
+            var res = minimax(diepte, 0, true , [], [-999999999, 999999999, -999999999]);
+        }
+        if(game.turn() === 'w'){
+            console.log("wit")
+            var res = minimax(diepte, 0, false , [], [999999999, -999999999, 999999999]);
+        }
+        console.log(res);
+        var tijdna= new Date();
+        var tijdsduur= tijdna.getTime()-tijdvoor.getTime();
+        aantalzetten+=1;
+        totaledenktijd+=tijdsduur;
+        var gemiddeldetijd= totaledenktijd/aantalzetten;
+        console.log ("het duurde:"+tijdsduur);
+        console.log("de denk tijd is gemiddeld:"+gemiddeldetijd);
+        
+        var randomIndex = Math.floor(Math.random() * res[1].length);
+        var possibleMoves= game.moves();
+        game.move(possibleMoves[res[1][randomIndex]]);
+        board.position(game.fen());
+        updateStatus();
+    } 
+
+var makeRandomMove = function() {
+  var possibleMoves = game.moves();
+
+  // exit if the game is over
+  if (game.game_over() === true ||
+    game.in_draw() === true ||
+    possibleMoves.length === 0) return;
+    if(game.turn() === 'b'){ getBestMove(dieptez)}
+    else{
+      getBestMove(dieptew);
+    } 
+  window.setTimeout(makeRandomMove, 500);
+};
+window.setTimeout(makeRandomMove, 500);
+ var updateStatus = function() {
+    var status = '';
+    var moveColor = 'White';
+    if (game.turn() === 'b') {
+        moveColor = 'Black';
+    }
+    // checkmate?
+    if (game.in_checkmate() === true) {
+        status = 'Game over, ' + moveColor + ' is in checkmate.';
+    }
+    // draw?
+    else if (game.in_draw() === true) {
+        status = 'Game over, drawn position';
+    }
+    // game still on
+    else {
+        status = moveColor + ' to move';
+        // check?
+        if (game.in_check() === true) {
+        status += ', ' + moveColor + ' is in check';
+        }
+    }
+    statusEl.html(status);
+    fenEl.html(game.fen());
+    pgnEl.html(game.pgn());
+    };
+    var cfg = {
+    position: 'start',
+
+    };
+    board = ChessBoard('board', cfg);
+    updateStatus();
+}; // end init()
+
